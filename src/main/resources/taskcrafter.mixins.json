@@ -1,0 +1,11 @@
+{
+	"required": true,
+	"package": "net.shycad.taskcrafter.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+		"ExampleMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

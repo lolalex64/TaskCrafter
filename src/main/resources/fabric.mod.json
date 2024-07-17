@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "taskcrafter",
+	"version": "${version}",
+	"name": "TaskCrafter",
+	"description": "This is a Mod for organizing your everyday Minecraft needs made by Shycad.",
+	"authors": [
+		"Shycad"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/taskcrafter/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.shycad.taskcrafter.TaskCrafter"
+		],
+		"client": [
+			"net.shycad.taskcrafter.TaskCrafterClient"
+		],
+		"fabric-datagen": [
+			"net.shycad.taskcrafter.TaskCrafterDataGenerator"
+		]
+	},
+	"mixins": [
+		"taskcrafter.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.15.11",
+		"minecraft": "~1.21",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
