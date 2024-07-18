@@ -2,6 +2,7 @@ package net.shycad.taskcrafter;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.shycad.taskcrafter.KeyBinds.KeyBindings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,4 +14,6 @@ public class TaskCrafter implements ModInitializer {
 	public void onInitialize() {
 
 	}
+
+
 }
