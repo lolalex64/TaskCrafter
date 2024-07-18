@@ -1,0 +1,1 @@
+This is a mod for minecraft that will simplyify your everyday needs for remembering stuff sometimes you need a checklist! to write something down and sometimes you need a calculator and sometimes you need a place to keep track of what items you need to gather!
