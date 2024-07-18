@@ -8,7 +8,9 @@ import net.minecraft.text.Text;
 import net.minecraft.client.gui.tooltip.Tooltip;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class ExampleScreen extends Screen {
@@ -17,11 +19,13 @@ public class ExampleScreen extends Screen {
     public ExampleScreen() {
         super(Text.of("Checklist"));
         items = new ArrayList<>();
+        buttons = new HashMap<>();
     }
 
     public ButtonWidget button1;
     private TextFieldWidget textField;
     private List<String>  items;
+    private Map<String, ButtonWidget> buttons;
     private boolean buttonClicked;
 
     @Override
@@ -32,6 +36,7 @@ public class ExampleScreen extends Screen {
                         items.add(text);
                         textField.setText("");
                         buttonClicked = true;
+                        createRemoveButtonForItem(text);
                     }
                 })
                 .dimensions(10, 40, 50 ,20)
@@ -47,6 +52,32 @@ public class ExampleScreen extends Screen {
         textField.setDrawsBackground(true);
         addSelectableChild(textField);
 
+       for (String item: items) {
+           createRemoveButtonForItem(item);
+       }
+
+    }
+
+    private void createRemoveButtonForItem(String item) {
+            ButtonWidget removeButton = ButtonWidget.builder(Text.literal("X"), button -> {
+                        items.remove(item);
+                        removeButtonFromScreen(item);
+                        buttonClicked = true; // Set flag to true to trigger re-rendering
+                    })
+                    .dimensions(this.width / 2 + 60, 0, 20, 20) // Initial position, will be updated in render method
+                    .tooltip(Tooltip.of(Text.literal("Remove")))
+                    .build();
+
+            buttons.put(item, removeButton);
+            addDrawableChild(removeButton);
+
+    }
+
+    private void removeButtonFromScreen(String item) {
+        ButtonWidget removeButton = buttons.remove(item);
+        if (removeButton != null) {
+          this.remove(removeButton);
+        }
     }
 
     @Override
@@ -55,10 +86,27 @@ public class ExampleScreen extends Screen {
         super.render(context, mouseX,mouseY, delta);
         textField.render(context, mouseX, mouseY, delta);
 
-        int y = this.height / 2 + 20;
+        int y = 20;
+        int buttonWidth = 20;
+        int buttonMargin = 5;
+        int itemspacing = 30;
+
         for (String item : items) {
-            context.drawTextWithShadow(this.textRenderer, item, this.width / 2 - 100, y, 0xFFFFFF); // Draw the text in white color
+
+            int textWidth = this.textRenderer.getWidth(item);
+            int x = (this.width - textWidth - buttonWidth - buttonMargin) / 2;
+
             y += 10; // Adjust the y position for the next item
+
+            ButtonWidget removeButton = buttons.get(item);
+            if (removeButton != null) {
+                removeButton.setPosition(x - buttonWidth - buttonMargin, y - 5);
+                removeButton.render(context, mouseX, mouseY, delta);
+            }
+
+            context.drawTextWithShadow(this.textRenderer, item, x, y, 0xFFFFFF);
+
+            y += itemspacing;// Adjust the y position for the next item
         }
 
     }
