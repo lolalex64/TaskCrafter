@@ -7,38 +7,42 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.client.gui.tooltip.Tooltip;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class ExampleScreen extends Screen {
 
 
     public ExampleScreen() {
         super(Text.of("Checklist"));
-        // Use Text.of() for text components
+        items = new ArrayList<>();
     }
 
     public ButtonWidget button1;
-    public ButtonWidget button2;
     private TextFieldWidget textField;
+    private List<String>  items;
+    private boolean buttonClicked;
 
     @Override
     protected void init() {
-        button1 = ButtonWidget.builder(Text.literal("Button1"), button -> {
-                    System.out.println("You Clicked button1!");
+        button1 = ButtonWidget.builder(Text.literal("ADD"), button -> {
+                    String text = textField.getText();
+                    if (!text.isEmpty()) {
+                        items.add(text);
+                        textField.setText("");
+                        buttonClicked = true;
+                    }
                 })
-                .dimensions(width / 2 - 205, 20, 200, 20)
-                .tooltip(Tooltip.of(Text.literal("Tooltip of button1")))
+                .dimensions(10, 40, 50 ,20)
+                .tooltip(Tooltip.of(Text.literal("")))
                 .build();
-        button2 = ButtonWidget.builder(Text.literal("Button 2"), button -> {
-                    System.out.println("You clicked button2!");
-                })
-                .dimensions(width / 2 + 5, 20, 200, 20)
-                .tooltip(Tooltip.of(Text.literal("Tooltip of button2")))
-                .build();
+
 
         addDrawableChild(button1);
-        addDrawableChild(button2);
 
-        textField = new TextFieldWidget(this.textRenderer, this.width / 2 - 100, this.height / 2 - 10, 200, 20, Text.of("Enter text..."));
+
+        textField = new TextFieldWidget(this.textRenderer, 10, 10, 100, 20, Text.of("Enter text"));
         textField.setEditable(true);
         textField.setDrawsBackground(true);
         addSelectableChild(textField);
@@ -51,8 +55,13 @@ public class ExampleScreen extends Screen {
         super.render(context, mouseX,mouseY, delta);
         textField.render(context, mouseX, mouseY, delta);
 
-    }
+        int y = this.height / 2 + 20;
+        for (String item : items) {
+            context.drawTextWithShadow(this.textRenderer, item, this.width / 2 - 100, y, 0xFFFFFF); // Draw the text in white color
+            y += 10; // Adjust the y position for the next item
+        }
 
+    }
     @Override
     public boolean charTyped(char chr, int keyCode) {
         return textField.charTyped(chr, keyCode) || super.charTyped(chr, keyCode);
@@ -75,5 +84,15 @@ public class ExampleScreen extends Screen {
     @Override
     public boolean shouldCloseOnEsc() {
         return true; // Allows closing screen with Escape key
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        // If the button was clicked, clear the focus and reset the flag
+        if (buttonClicked) {
+            setFocused(null);
+            buttonClicked = false;
+        }
     }
 }
